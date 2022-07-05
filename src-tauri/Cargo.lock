@@ -59,6 +59,7 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde_json",
+ "steamworks",
  "tauri",
  "tauri-build",
 ]
@@ -2588,6 +2589,24 @@ checksum = "dbe866e1e51e8260c9eed836a042a5e7f6726bb2b411dffeaa712e19c388f23b"
 dependencies = [
  "loom",
 ]
+
+[[package]]
+name = "steamworks"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2728e9e381f0b2bba62d871c4fe352c5a234c455491fb60029fe3c7a5795258d"
+dependencies = [
+ "bitflags",
+ "lazy_static",
+ "steamworks-sys",
+ "thiserror",
+]
+
+[[package]]
+name = "steamworks-sys"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b487041f3605bd8536079fc456c263ee6300a736b00c9bffdeec65328dbe4f3"
 
 [[package]]
 name = "string_cache"

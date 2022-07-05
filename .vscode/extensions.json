@@ -1,3 +1,21 @@
 {
-  "recommendations": ["Vue.volar"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "dariofuzinato.vue-peek",
+    "Vue.volar",
+    "wayou.vscode-todo-highlight",
+    "syler.sass-indented",
+    "christian-kohler.path-intellisense",
+    "rust-lang.rust-analyzer",
+    "tamasfe.even-better-toml",
+    "jedeop.crates-completer"
+  ],
+  "unwantedRecommendations": [
+    "hookyqr.beautify",
+    "dbaeumer.jshint",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+    "octref.vetur",
+  ]
 }
