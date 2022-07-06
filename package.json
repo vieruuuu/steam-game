@@ -3,10 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
+    "web:dev": "vite",
+    "web:build": "vue-tsc --noEmit && vite build",
+    "dev": "tauri dev",
+    "build": "tauri build"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.0.1",
