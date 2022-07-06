@@ -55,6 +55,7 @@
     "useRoute": true,
     "useRouter": true,
     "useSlots": true,
+    "useSteamStore": true,
     "watch": true,
     "watchEffect": true,
     "watchPostEffect": true,
