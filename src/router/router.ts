@@ -23,7 +23,7 @@ function stopLoading() {
   LoadingBar.stop();
 }
 
-export default async ({ app }: { app: App }) => {
+export default async (app: App) => {
   const Router = createRouter({
     routes,
     history: createWebHistory(),
