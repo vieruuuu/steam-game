@@ -5,19 +5,19 @@ import "./css/app.scss";
 
 import App from "./App.vue";
 
-// import initRouter from "./router";
+import initRouter from "./router/router";
 
 const app = createApp(App);
 
 (async () => {
   app.use(createPinia());
 
-  // const router = await initRouter(app);
+  const router = await initRouter(app);
 
   const initFiles = import.meta.globEager("./init/*.ts");
   const initParameters = {
     app,
-    // router,
+    router,
   };
 
   const initFunctions = Object.entries(initFiles).map(
