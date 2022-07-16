@@ -1,3 +1,5 @@
+import { App } from "vue";
+
 import { createRouter, createWebHistory } from "vue-router";
 import { LoadingBar } from "quasar";
 
@@ -21,7 +23,7 @@ function stopLoading() {
   LoadingBar.stop();
 }
 
-export default async (app) => {
+export default async ({ app }: { app: App }) => {
   const Router = createRouter({
     routes,
     history: createWebHistory(),
