@@ -1,24 +1,25 @@
 <template>
-  <q-card class="my-card" flat bordered>
-    <q-card-section horizontal>
-      <q-img class="col-4" src="https://cdn.quasar.dev/img/parallax1.jpg" />
+  <p>Items in Inventory:</p>
 
+  <div class="q-gutter-md row flex-center">
+    <q-card
+      v-for="item in inventoryItems"
+      :key="item.name"
+      flat
+      bordered
+      style="width: 200px"
+    >
       <q-card-section>
-        <div class="text-h6">Our Changing Planet</div>
+        <q-img src="https://cdn.quasar.dev/img/parallax1.jpg" />
 
-        <tokens-display :value="10" />
+        <q-card-section>
+          <div class="text-h6">{{ item.name }}</div>
+        </q-card-section>
       </q-card-section>
-    </q-card-section>
-  </q-card>
-
-  <p v-for="n in 15" :key="n">
-    Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit nihil
-    praesentium molestias a adipisci, dolore vitae odit, quidem consequatur
-    optio voluptates asperiores pariatur eos numquam rerum delectus commodi
-    perferendis voluptate?
-  </p>
+    </q-card>
+  </div>
 </template>
 
 <script setup lang="ts">
-import TokensDisplay from "@@/tokens-display.vue";
+const { inventoryItems } = useSteamStore();
 </script>
