@@ -19,6 +19,9 @@ export default defineConfig(async ({ command }) => {
     command === "build" && process.env.CHUNK_PREVIEW !== "false";
 
   return {
+    server: {
+      port: 3000,
+    },
     build: {
       rollupOptions: {
         plugins: [

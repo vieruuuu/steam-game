@@ -1,5 +1,6 @@
 import { createPinia } from "pinia";
-import { createApp } from "vue";
+import { createApp, App as AppT } from "vue";
+import { Router } from "vue-router";
 
 import "./css/app.scss";
 
@@ -9,13 +10,24 @@ import initRouter from "./router/router";
 
 const app = createApp(App);
 
+type initFunctionParamsT = {
+  app: AppT;
+  router: Router;
+};
+
+type initFunctionT = (params: initFunctionParamsT) => void;
+
 (async () => {
   app.use(createPinia());
 
   const router = await initRouter(app);
 
-  const initFiles = import.meta.globEager("./init/*.ts");
-  const initParameters = {
+  const initFiles: Record<string, { default: initFunctionT }> =
+    import.meta.glob("./init/*.ts", {
+      eager: true,
+    });
+
+  const initParameters: initFunctionParamsT = {
     app,
     router,
   };
