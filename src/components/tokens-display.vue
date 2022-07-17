@@ -1,12 +1,8 @@
 <template>
-  <div class="row items-center flex-center">
-    <div class="text-subtitle1 text-weight-bold text-green">
-      {{ tokens }}
-    </div>
+  <div class="row flex-center text-subtitle1 text-weight-bold text-green">
+    {{ tokens }}
 
-    <div class="q-ml-xs">
-      <q-icon size="sm" rounded name="paid" class="text-green" />
-    </div>
+    <q-icon size="sm" rounded name="paid" class="q-ml-xs" />
   </div>
 </template>
 

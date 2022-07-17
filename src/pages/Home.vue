@@ -1,4 +1,6 @@
 <template>
+  <hot-jobs />
+
   <p>Items in Inventory:</p>
 
   <router-link to="/error">test</router-link>
@@ -23,5 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import HotJobs from "@@/hot-jobs.vue";
+
 const { inventoryItems } = useSteamStore();
 </script>

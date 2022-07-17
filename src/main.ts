@@ -15,17 +15,17 @@ type initFunctionParamsT = {
   router: Router;
 };
 
-type initFunctionT = (params: initFunctionParamsT) => void;
-
 (async () => {
   app.use(createPinia());
 
   const router = await initRouter(app);
 
-  const initFiles: Record<string, { default: initFunctionT }> =
-    import.meta.glob("./init/*.ts", {
-      eager: true,
-    });
+  const initFiles: Record<
+    string,
+    { default: (params: initFunctionParamsT) => void }
+  > = import.meta.glob("./init/*.ts", {
+    eager: true,
+  });
 
   const initParameters: initFunctionParamsT = {
     app,
