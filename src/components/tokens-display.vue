@@ -23,13 +23,12 @@ const tokens = computed(() => {
   return currentTokens.value;
 });
 
-const { currentTokens } = useSteamStore();
+const { currentTokens, addTokensUpdater, removeTokensUpdater } =
+  useSteamStore();
 
-if (!props.value) {
-  const intervalId = setInterval(() => currentTokens.value++, 1000);
+addTokensUpdater();
 
-  onUnmounted(() => {
-    clearInterval(intervalId);
-  });
-}
+onUnmounted(() => {
+  removeTokensUpdater();
+});
 </script>

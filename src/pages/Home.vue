@@ -1,6 +1,8 @@
 <template>
   <p>Items in Inventory:</p>
 
+  <router-link to="/error">test</router-link>
+
   <div class="q-gutter-md row flex-center">
     <q-card
       v-for="item in inventoryItems"
