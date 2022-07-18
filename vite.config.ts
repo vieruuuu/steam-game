@@ -24,6 +24,7 @@ export default defineConfig(async ({ command }) => {
       port: 3000,
     },
     build: {
+      emptyOutDir: true,
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, "src/index.html"),
