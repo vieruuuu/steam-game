@@ -19,11 +19,19 @@ export default defineConfig(async ({ command }) => {
     command === "build" && process.env.CHUNK_PREVIEW !== "false";
 
   return {
+    root: "src",
     server: {
       port: 3000,
     },
     build: {
       rollupOptions: {
+        input: {
+          main: path.resolve(__dirname, "src/index.html"),
+          splashscreen: path.resolve(__dirname, "src/splashscreen.html"),
+        },
+        output: {
+          dir: "dist",
+        },
         plugins: [
           CHUNK_PREVIEW
             ? VisualizeChunksPlugin({

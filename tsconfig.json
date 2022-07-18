@@ -47,8 +47,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "configs/**/*.ts",
-    "auto-imports.d.ts"
+    "configs/**/*.ts"
   ],
   "references": [
     {
