@@ -27,7 +27,7 @@ export default defineConfig(async ({ command }) => {
         plugins: [
           CHUNK_PREVIEW
             ? VisualizeChunksPlugin({
-                open: true,
+                open: false,
                 template: "treemap",
                 filename: "misc/chunks-report.html",
               })
