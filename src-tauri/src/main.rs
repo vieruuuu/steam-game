@@ -27,27 +27,33 @@ fn main() {
     let context = tauri::generate_context!();
     tauri::Builder::default()
         .setup(|app| {
-            let splashscreen_window = app.get_window("splashscreen").unwrap();
-            let main_window = app.get_window("main").unwrap();
+            let handle = app.app_handle();
 
-            app.emit_to("splashscreen", "initialising-steamworks", ())
-                .unwrap();
-            splashscreen_window.show().unwrap();
+            let splashscreen_window = handle.get_window("splashscreen").unwrap();
+            let main_window = handle.get_window("main").unwrap();
 
-            app.manage(initialise_steamworks_client());
+            tauri::async_runtime::spawn(async move {
+                handle
+                    .emit_to("splashscreen", "initialising-steamworks", ())
+                    .unwrap();
 
-            let steamworks = app.state::<SteamworksClient<ClientManager>>();
-            app.emit_to(
-                "splashscreen",
-                "initialised-steam",
-                steamworks.friends().name(),
-            )
-            .unwrap();
+                handle.manage(initialise_steamworks_client());
 
-            std::thread::sleep(Duration::from_secs(1));
+                let steamworks = handle.state::<SteamworksClient<ClientManager>>();
 
-            splashscreen_window.close().unwrap();
-            main_window.show().unwrap();
+                handle
+                    .emit_to(
+                        "splashscreen",
+                        "initialised-steam",
+                        steamworks.friends().name(),
+                    )
+                    .unwrap();
+
+                std::thread::sleep(Duration::from_secs(5));
+
+                main_window.show().unwrap();
+                splashscreen_window.close().unwrap();
+            });
 
             Ok(())
         })
