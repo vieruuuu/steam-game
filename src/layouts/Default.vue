@@ -26,8 +26,8 @@ import TokensDisplay from "@@/tokens-display.vue";
 const playerName = ref("");
 
 (async () => {
-  const response: string = await invoke("get_player_name");
+  // const response = await invoke("get_player_name");
 
-  playerName.value = response;
+  playerName.value = "response";
 })();
 </script>

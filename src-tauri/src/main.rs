@@ -33,23 +33,21 @@ fn main() {
             let main_window = handle.get_window("main").unwrap();
 
             tauri::async_runtime::spawn(async move {
+                std::thread::sleep(Duration::from_secs(5));
+
                 handle
-                    .emit_to("splashscreen", "initialising-steamworks", ())
+                    .emit_to("splashscreen", "initialization", "Initializing Steam")
                     .unwrap();
 
                 handle.manage(initialise_steamworks_client());
 
-                let steamworks = handle.state::<SteamworksClient<ClientManager>>();
+                handle.state::<SteamworksClient<ClientManager>>();
 
                 handle
-                    .emit_to(
-                        "splashscreen",
-                        "initialised-steam",
-                        steamworks.friends().name(),
-                    )
+                    .emit_to("splashscreen", "initialization", "Initialized Steam")
                     .unwrap();
 
-                std::thread::sleep(Duration::from_secs(5));
+                std::thread::sleep(Duration::from_secs(100000));
 
                 main_window.show().unwrap();
                 splashscreen_window.close().unwrap();
