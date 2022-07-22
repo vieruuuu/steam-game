@@ -61,17 +61,6 @@
     },
     "windows": [
       {
-        "fullscreen": false,
-        "resizable": true,
-        "title": "Steam Game",
-        "width": 800,
-        "height": 600,
-        "minWidth": 800,
-        "minHeight": 600,
-        "visible": false,
-        "label": "main"
-      },
-      {
         "width": 800,
         "height": 400,
         "center": true,

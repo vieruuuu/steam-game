@@ -30,7 +30,6 @@ fn main() {
             let handle = app.app_handle();
 
             let splashscreen_window = handle.get_window("splashscreen").unwrap();
-            let main_window = handle.get_window("main").unwrap();
 
             tauri::async_runtime::spawn(async move {
                 std::thread::sleep(Duration::from_secs(5));
@@ -47,10 +46,24 @@ fn main() {
                     .emit_to("splashscreen", "initialization", "Initialized Steam")
                     .unwrap();
 
-                std::thread::sleep(Duration::from_secs(100000));
+                let main_window = tauri::WindowBuilder::new(
+                    &handle,
+                    "main",
+                    tauri::WindowUrl::App("index.html".into()),
+                )
+                .title("Steam Game")
+                .visible(false)
+                .min_inner_size(800., 600.)
+                .inner_size(800., 600.)
+                .build()
+                .expect("failed to build window");
 
-                main_window.show().unwrap();
-                splashscreen_window.close().unwrap();
+                let main_window_ = main_window.clone();
+
+                main_window.once("app-mounted", move |_| {
+                    main_window_.show().unwrap();
+                    splashscreen_window.close().unwrap();
+                });
             });
 
             Ok(())
