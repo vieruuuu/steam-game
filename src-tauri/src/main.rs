@@ -32,37 +32,43 @@ fn main() {
             let splashscreen_window = handle.get_window("splashscreen").unwrap();
 
             tauri::async_runtime::spawn(async move {
-                std::thread::sleep(Duration::from_secs(5));
+                let splashscreen_window_ = splashscreen_window.clone();
 
-                handle
-                    .emit_to("splashscreen", "initialization", "Initializing Steam")
-                    .unwrap();
+                splashscreen_window.once("splashscreen_loaded", move |_| {
+                    handle
+                        .emit_to("splashscreen", "initialization", "Initializing Steam...")
+                        .unwrap();
 
-                handle.manage(initialise_steamworks_client());
+                    handle.manage(initialise_steamworks_client());
 
-                handle.state::<SteamworksClient<ClientManager>>();
+                    handle.state::<SteamworksClient<ClientManager>>();
 
-                handle
-                    .emit_to("splashscreen", "initialization", "Initialized Steam")
-                    .unwrap();
+                    handle
+                        .emit_to("splashscreen", "initialization", "Initialized Steam!")
+                        .unwrap();
 
-                let main_window = tauri::WindowBuilder::new(
-                    &handle,
-                    "main",
-                    tauri::WindowUrl::App("index.html".into()),
-                )
-                .title("Steam Game")
-                .visible(false)
-                .min_inner_size(800., 600.)
-                .inner_size(800., 600.)
-                .build()
-                .expect("failed to build window");
+                    handle
+                        .emit_to("splashscreen", "initialization", "Initializing App...")
+                        .unwrap();
 
-                let main_window_ = main_window.clone();
+                    let main_window = tauri::WindowBuilder::new(
+                        &handle,
+                        "main",
+                        tauri::WindowUrl::App("index.html".into()),
+                    )
+                    .title("Steam Game")
+                    .visible(false)
+                    .min_inner_size(800., 600.)
+                    .inner_size(800., 600.)
+                    .build()
+                    .expect("failed to build window");
 
-                main_window.once("app-mounted", move |_| {
-                    main_window_.show().unwrap();
-                    splashscreen_window.close().unwrap();
+                    let main_window_ = main_window.clone();
+
+                    main_window.once("app_loaded", move |_| {
+                        main_window_.show().unwrap();
+                        splashscreen_window_.close().unwrap();
+                    });
                 });
             });
 

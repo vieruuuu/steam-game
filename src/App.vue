@@ -6,6 +6,6 @@
 import { appWindow } from "@tauri-apps/api/window";
 
 onMounted(async () => {
-  await appWindow.emit("app-mounted");
+  await appWindow.emit("app_loaded");
 });
 </script>
