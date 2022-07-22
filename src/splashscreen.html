@@ -13,10 +13,11 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        cursor: default;
       }
 
       body {
-        background-color: red;
+        background-color: black;
       }
 
       #app {
@@ -29,7 +30,23 @@
     </style>
   </head>
   <body>
-    <div data-tauri-drag-region id="app">This is the splashscreen</div>
+    <div data-tauri-drag-region id="app">
+      <div
+        id="message"
+        data-tauri-drag-region
+        style="
+          position: absolute;
+          bottom: 15px;
+          right: 15px;
+          z-index: 1000;
+          color: white;
+          font-size: large;
+          font-family: monospace;
+        "
+      >
+        Starting splashscreen...
+      </div>
+    </div>
 
     <script type="module" src="splashscreen.ts"></script>
   </body>

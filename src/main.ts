@@ -20,10 +20,9 @@ type initFunctionParamsT = {
 
   const router = await initRouter(app);
 
-  const initFiles: Record<
-    string,
-    { default: (params: initFunctionParamsT) => void }
-  > = import.meta.glob("./init/*.ts", {
+  const initFiles = import.meta.glob<{
+    default: (params: initFunctionParamsT) => Promise<void>;
+  }>("./init/*.ts", {
     eager: true,
   });
 
