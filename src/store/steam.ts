@@ -1,12 +1,19 @@
+import { Howl } from "howler";
+
 import { defineRefStore } from "./lib/defineRefStore.js";
 
 // import { invoke } from "@tauri-apps/api";
 
 type InventoryItem = { name: string };
 
+const coinSound = new Howl({
+  src: [getAsset("sounds/coin.mp3")],
+});
+
 export const useSteamStore = defineRefStore("steam", () => {
   const { createInterval, stopInterval } = useGlobalStore();
 
+  const fastTokens = ref(0);
   const currentTokens = ref(0);
 
   const inventoryItems = ref<InventoryItem[]>([
@@ -31,18 +38,26 @@ export const useSteamStore = defineRefStore("steam", () => {
   //   // _inventoryItems.value = await invoke("get_all_items");
   // }
 
-  const addTokensUpdater = () =>
+  function addTokensUpdater() {
     createInterval(
-      "tokens",
+      "fastTokens",
       () => {
-        currentTokens.value++;
+        if (++fastTokens.value === 60) {
+          fastTokens.value = 0;
+          currentTokens.value = currentTokens.value + 60;
+          coinSound.play();
+        }
       },
       1000
     );
+  }
 
-  const removeTokensUpdater = () => stopInterval("tokens");
+  function removeTokensUpdater() {
+    stopInterval("currentTokens");
+  }
 
   return {
+    fastTokens,
     currentTokens,
     inventoryItems,
     addTokensUpdater,

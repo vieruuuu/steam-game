@@ -11,6 +11,8 @@
   "dependencies": {
     "@quasar/extras": "^1.14.3",
     "@tauri-apps/api": "^1.0.2",
+    "@types/howler": "^2.2.7",
+    "howler": "^2.2.3",
     "pinia": "^2.0.16",
     "quasar": "^2.7.5",
     "tsparticles-engine": "^2.1.3",

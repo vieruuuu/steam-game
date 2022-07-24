@@ -6,7 +6,16 @@
 
         <q-space />
 
-        <tokens-display />
+        <div class="row flex-center text-subtitle1 text-weight-bold text-green">
+          <span class="q-mr-xs">{{ currentTokens }}</span>
+          <span class="text-yellow-10">+{{ fastTokens }}</span>
+
+          <q-icon size="sm" rounded name="paid" class="q-ml-xs" />
+
+          <q-tooltip class="text-caption">
+            Each minute you gain 60 Tokens!
+          </q-tooltip>
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -21,9 +30,16 @@
 <script setup lang="ts">
 import { invoke } from "@tauri-apps/api";
 
-import TokensDisplay from "@@/tokens-display.vue";
+const { currentTokens, fastTokens, addTokensUpdater, removeTokensUpdater } =
+  useSteamStore();
 
 const playerName = ref("");
+
+addTokensUpdater();
+
+onUnmounted(() => {
+  removeTokensUpdater();
+});
 
 (async () => {
   const response = await invoke<string>("get_player_name");

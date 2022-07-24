@@ -4,9 +4,26 @@
  * @returns A string of the URL to the asset.
  */
 function getAsset(path: string) {
-  const url = new URL(`./../assets/${path}`, import.meta.url);
+  const assetModules = import.meta.glob<{ default: string }>(
+    "./../assets/**/*.*",
+    { eager: true }
+  );
 
-  return url.toString();
+  const assetsArray = Object.entries(assetModules).map(
+    ([path, { default: processedPath }]) => {
+      const [, pathWithoutPrefix] = path.split("../assets/");
+
+      return [pathWithoutPrefix, processedPath];
+    }
+  );
+
+  const assetsObj: { [path: string]: string } = Object.fromEntries(assetsArray);
+
+  if (!assetsObj[path]) {
+    throw "can't find asset: " + path;
+  }
+
+  return assetsObj[path];
 }
 
 export { getAsset };
