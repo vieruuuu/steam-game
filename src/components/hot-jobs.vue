@@ -6,6 +6,7 @@
     </p>
 
     <div
+      ref="divRef"
       class="q-gutter-x-md q-pb-md"
       style="overflow: auto; white-space: nowrap"
     >
@@ -15,6 +16,10 @@
         bordered
         flat
         style="width: 200px; display: inline-block; white-space: normal"
+        @mousedown="onMouseOver"
+        @mousemove="onMouseMove"
+        @mouseleave="onMouseLeave"
+        @mouseup="onMouseLeave"
       >
         <img src="https://cdn.quasar.dev/img/mountains.jpg" />
 
@@ -24,14 +29,29 @@
           <div>
             <div class="text-subtitle1 row text-blue-grey-7">
               {{ job.interested }}
-              <q-icon class="q-ml-xs" name="group" size="sm" />
+              <q-icon
+                style="cursor: default"
+                class="q-ml-xs"
+                name="group"
+                size="sm"
+              />
 
-              <q-tooltip :delay="1000"> Interested Buyers </q-tooltip>
+              <q-tooltip :delay="1000" style="font-size: 12px">
+                Interested Buyers
+              </q-tooltip>
             </div>
             <div class="text-h6 text-green row">
-              {{ job.pay }} <q-icon class="q-ml-xs" name="paid" size="md" />
+              {{ job.pay }}
+              <q-icon
+                style="cursor: default"
+                class="q-ml-xs"
+                name="paid"
+                size="md"
+              />
 
-              <q-tooltip :delay="1000"> Estimated Market Value </q-tooltip>
+              <q-tooltip :delay="1000" style="font-size: 12px">
+                Estimated Market Value
+              </q-tooltip>
             </div>
           </div>
         </q-card-section>
@@ -47,6 +67,12 @@
 </template>
 
 <script setup lang="ts">
+import { useScrollContainer } from "@/lib/useScrollContainer";
+
+const divRef = ref();
+
+const { onMouseLeave, onMouseMove, onMouseOver } = useScrollContainer(divRef);
+
 const random = () => Math.floor(Math.random() * 9000);
 
 const DEMO_JOBS = [
