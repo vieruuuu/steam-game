@@ -40,7 +40,7 @@ export const useSteamStore = defineRefStore("steam", () => {
 
   function addTokensUpdater() {
     createInterval(
-      "fastTokens",
+      "tokens",
       () => {
         if (++fastTokens.value === 60) {
           fastTokens.value = 0;
@@ -53,7 +53,7 @@ export const useSteamStore = defineRefStore("steam", () => {
   }
 
   function removeTokensUpdater() {
-    stopInterval("currentTokens");
+    stopInterval("tokens");
   }
 
   return {
