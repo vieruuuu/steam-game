@@ -12,7 +12,7 @@
 use std::time::Duration;
 
 use steamworks::{Client as SteamworksClient, ClientManager};
-use tauri::{Manager, State};
+use tauri::{AppHandle, Manager, State};
 
 #[tauri::command]
 fn get_player_name(client: State<'_, SteamworksClient<ClientManager>>) -> String {
@@ -35,17 +35,7 @@ fn main() {
                 let splashscreen_window_ = splashscreen_window.clone();
 
                 splashscreen_window.once("splashscreen_loaded", move |_| {
-                    handle
-                        .emit_to("splashscreen", "initialization", "Initializing Steam...")
-                        .unwrap();
-
-                    handle.manage(initialise_steamworks_client());
-
-                    handle.state::<SteamworksClient<ClientManager>>();
-
-                    handle
-                        .emit_to("splashscreen", "initialization", "Initialized Steam!")
-                        .unwrap();
+                    initialise_steamworks_client(handle.clone());
 
                     handle
                         .emit_to("splashscreen", "initialization", "Initializing App...")
@@ -84,15 +74,27 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-fn initialise_steamworks_client() -> SteamworksClient<ClientManager> {
-    loop {
+fn initialise_steamworks_client<R: tauri::Runtime>(handle: AppHandle<R>) {
+    std::thread::spawn(move || loop {
+        handle
+            .emit_to("splashscreen", "initialization", "Initializing Steam...")
+            .unwrap();
+
         let steamworks = SteamworksClient::init_app(480);
 
         match steamworks {
-            Ok(client) => return client.0,
+            Ok(client) => {
+                handle.manage(client.0);
+
+                handle
+                    .emit_to("splashscreen", "initialization", "Initialized Steam!")
+                    .unwrap();
+
+                break;
+            }
             Err(why) => println!("Failed to init steamworks, will try again...\n\tError: {why}"),
         }
 
         std::thread::sleep(Duration::from_secs(1));
-    }
+    });
 }
