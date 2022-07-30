@@ -12,7 +12,8 @@
 use std::time::Duration;
 
 use steamworks::{Client as SteamworksClient, ClientManager};
-use tauri::{AppHandle, Manager, State};
+use tauri::{async_runtime::spawn, AppHandle, Manager, State, Window};
+use tokio::sync::oneshot;
 
 #[tauri::command]
 fn get_player_name(client: State<'_, SteamworksClient<ClientManager>>) -> String {
@@ -31,34 +32,11 @@ fn main() {
 
             let splashscreen_window = handle.get_window("splashscreen").unwrap();
 
-            tauri::async_runtime::spawn(async move {
+            spawn(async move {
                 let splashscreen_window_ = splashscreen_window.clone();
 
                 splashscreen_window.once("splashscreen_loaded", move |_| {
-                    initialise_steamworks_client(handle.clone());
-
-                    handle
-                        .emit_to("splashscreen", "initialization", "Initializing App...")
-                        .unwrap();
-
-                    let main_window = tauri::WindowBuilder::new(
-                        &handle,
-                        "main",
-                        tauri::WindowUrl::App("index.html".into()),
-                    )
-                    .title("Steam Game")
-                    .visible(false)
-                    .min_inner_size(800., 600.)
-                    .inner_size(800., 600.)
-                    .build()
-                    .expect("failed to build window");
-
-                    let main_window_ = main_window.clone();
-
-                    main_window.once("app_loaded", move |_| {
-                        main_window_.show().unwrap();
-                        splashscreen_window_.close().unwrap();
-                    });
+                    spawn(splashscreen_loaded(handle, splashscreen_window_));
                 });
             });
 
@@ -74,7 +52,35 @@ fn main() {
         .expect("error while running tauri application");
 }
 
-fn initialise_steamworks_client<R: tauri::Runtime>(handle: AppHandle<R>) {
+async fn splashscreen_loaded<R: tauri::Runtime>(handle: AppHandle<R>, splashscreen_window: Window) {
+    let (tx, rx) = tokio::sync::oneshot::channel::<()>();
+
+    initialise_steamworks_client(handle.clone(), tx);
+
+    let _ = rx.await;
+
+    handle
+        .emit_to("splashscreen", "initialization", "Initializing App...")
+        .unwrap();
+
+    let main_window =
+        tauri::WindowBuilder::new(&handle, "main", tauri::WindowUrl::App("index.html".into()))
+            .title("Steam Game")
+            .visible(false)
+            .min_inner_size(800., 600.)
+            .inner_size(800., 600.)
+            .build()
+            .expect("failed to build window");
+
+    let main_window_ = main_window.clone();
+
+    main_window.once("app_loaded", move |_| {
+        main_window_.show().unwrap();
+        splashscreen_window.close().unwrap();
+    });
+}
+
+fn initialise_steamworks_client<R: tauri::Runtime>(handle: AppHandle<R>, tx: oneshot::Sender<()>) {
     std::thread::spawn(move || loop {
         handle
             .emit_to("splashscreen", "initialization", "Initializing Steam...")
@@ -89,6 +95,8 @@ fn initialise_steamworks_client<R: tauri::Runtime>(handle: AppHandle<R>) {
                 handle
                     .emit_to("splashscreen", "initialization", "Initialized Steam!")
                     .unwrap();
+
+                let _ = tx.send(());
 
                 break;
             }
